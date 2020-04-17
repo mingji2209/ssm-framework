@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jms="http://www.springframework.org/schema/jms"
+       xmlns:amq="http://activemq.apache.org/schema/core" xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms.xsd http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:component-scan base-package="com.jsoft.framework.ssm.mq" />
+
+    <!-- #### ActiveMq配置 start ####-->
+    <!-- 1. ActiveMq连接工厂 -->
+    <bean id="activeMQConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+        <property name="brokerURL" value="tcp://192.168.5.103:61616" />
+    </bean>
+
+    <!--2. Spring Caching 连接工厂(类似数据库线程池的东西，减少连接的创建。) -->
+    <!-- 由于jmsTemplate每次发送消息都需要创建连接和创建session了，所以引入这个类似连接池的连接工厂，优化Mq的性能 -->
+    <!-- 配置connectionFactory的连接池信息 -->
+    <bean id="connectionFactory" class="org.springframework.jms.connection.CachingConnectionFactory">
+        <!-- 目标连接工厂 指向 ActiveMq工厂 -->
+        <property name="targetConnectionFactory" ref="activeMQConnectionFactory" />
+        <!-- session缓存的最大个数-->
+        <property name="sessionCacheSize" value="100" />
+    </bean>
+    <!-- 3.配置jmsTemplate，用于发送发送mq消息 -->
+    <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+        <description>队列模式</description>
+        <property name="connectionFactory" ref="connectionFactory" />
+        <property name="receiveTimeout" value="10000"/>
+        <!-- 如果是True则是topic,默认和false则是queue-->
+        <property name="pubSubDomain" value="false"/>
+    </bean>
+    <!-- 4.定义Queue监听器 -->
+    <jms:listener-container destination-type="queue" container-type="default" connection-factory="connectionFactory" acknowledge="auto">
+        <!--  可以配置多个监听器-->
+        <jms:listener destination="com.jsoft.framework.ssm.queue.hign.concurrency.praise" ref="moodConsume"/>
+    </jms:listener-container>
+</beans>
