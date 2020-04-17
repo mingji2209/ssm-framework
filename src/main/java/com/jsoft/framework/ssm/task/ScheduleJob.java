@@ -27,7 +27,7 @@ public class ScheduleJob {
      * 注解方式
      * 每5秒执行一次
      */
-    @Scheduled(cron = "0/5 * * * * *")
+//    @Scheduled(cron = "0/5 * * * * *")
     public void runJob2(){
         log.info("注解定时任务执行：{}", System.currentTimeMillis());
     }
