@@ -20,7 +20,7 @@
         <junit.version>4.12</junit.version>
 
         <!-- spring -->
-        <spring.version>5.0.4.RELEASE</spring.version>
+        <spring.version>5.2.5.RELEASE</spring.version>
 
         <!-- 数据库 -->
         <!-- mybatis -->
