@@ -17,7 +17,7 @@
 
         <!-- 测试 -->
         <!-- junit -->
-        <junit.version>4.12</junit.version>
+        <junit.version>4.13.1</junit.version>
 
         <!-- spring -->
         <spring.version>5.0.4.RELEASE</spring.version>
