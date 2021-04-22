@@ -24,7 +24,7 @@
 
         <!-- 数据库 -->
         <!-- mybatis -->
-        <mybatis.version>3.4.6</mybatis.version>
+        <mybatis.version>3.5.6</mybatis.version>
         <!-- mybatis-spring -->
         <mybatis-spring.version>1.3.2</mybatis-spring.version>
         <!-- mybatis分页插件 -->
